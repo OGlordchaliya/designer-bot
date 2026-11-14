@@ -77,3 +77,39 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
 ## 🗄️ Database Provisioning
 
 To set up Supabase / PostgreSQL with Row Level Security (RLS), execute `schema.sql` in your Supabase SQL Editor.
+
+---
+
+## 🚀 Live Production Deployment
+
+### Option A: Deploy to Vercel (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FOGlordchaliya%2Fdesigner-bot)
+
+1. Click the **Deploy with Vercel** button above or go to [Vercel Dashboard](https://vercel.com/new).
+2. Select **Import Git Repository** and choose `OGlordchaliya/designer-bot`.
+3. Vercel automatically detects Next.js 14 via `vercel.json`.
+4. (Optional) Add your environment variables:
+   - `OPENAI_API_KEY`
+   - `GEMINI_API_KEY`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Click **Deploy**. Your app will be live with a global CDN and automatic HTTPS in under 2 minutes!
+
+### Option B: Deploy to Netlify
+
+1. Go to [Netlify Dashboard](https://app.netlify.com/start).
+2. Select **Import from GitHub** &rarr; `OGlordchaliya/designer-bot`.
+3. Netlify will automatically detect the build settings via `netlify.toml`.
+4. Click **Deploy Site**.
+
+### Option C: Self-Hosted Docker Container
+
+```bash
+# Build production Docker image
+docker build -t designer-bot .
+
+# Run on port 3000
+docker run -p 3000:3000 designer-bot
+```
+
