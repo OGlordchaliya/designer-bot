@@ -1,15 +1,26 @@
 import { DesignDocument } from '../ddom/types';
 import { SVGExportEngine } from './svgExport';
 
+function escapeHTML(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export class HTMLExportEngine {
   static generateHTML(doc: DesignDocument): string {
     const svgCode = SVGExportEngine.generateSVG(doc);
+    const safeTitle = escapeHTML(doc.title || 'Creative Design');
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${doc.title}</title>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>${safeTitle}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -46,11 +57,14 @@ export class HTMLExportEngine {
   }
 
   static generateReactComponent(doc: DesignDocument): string {
-    const compName = doc.title.replace(/[^a-zA-Z0-9]/g, '') || 'CreativeDesign';
+    let rawName = doc.title.replace(/[^a-zA-Z0-9]/g, '');
+    if (!rawName || /^[0-9]/.test(rawName)) {
+      rawName = `CreativeDesign_${rawName}`;
+    }
     const svgCode = SVGExportEngine.generateSVG(doc);
     return `import React from 'react';
 
-export const ${compName}: React.FC<{ className?: string; style?: React.CSSProperties }> = ({ className, style }) => {
+export const ${rawName}: React.FC<{ className?: string; style?: React.CSSProperties }> = ({ className, style }) => {
   return (
     <div className={className} style={{ display: 'inline-block', maxWidth: '100%', ...style }}>
       ${svgCode}
@@ -58,6 +72,6 @@ export const ${compName}: React.FC<{ className?: string; style?: React.CSSProper
   );
 };
 
-export default ${compName};`;
+export default ${rawName};`;
   }
 }
